@@ -11,6 +11,7 @@ function Dashboard({
   const [teachSkill, setTeachSkill] = useState("");
   const [learnSkill, setLearnSkill] = useState("");
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const [stats, setStats] = useState({
     matches: 0,
@@ -18,9 +19,7 @@ function Dashboard({
     connections: 0,
   });
 
-  const [statsMessage, setStatsMessage] = useState(
-    "Loading stats..."
-  );
+  const [statsMessage, setStatsMessage] = useState("Loading stats...");
 
   useEffect(() => {
     const loadStats = async () => {
@@ -49,6 +48,7 @@ function Dashboard({
 
         setStatsMessage("");
       } catch (error) {
+        console.error("Stats loading error:", error);
         setStatsMessage("Could not connect to the server.");
       }
     };
@@ -59,12 +59,16 @@ function Dashboard({
   const handleSaveSkills = async (event) => {
     event.preventDefault();
 
+    setMessage("");
+    setMessageType("");
+
     try {
       const response = await fetch("/api/users/skills", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           email: email,
           teachSkill: teachSkill,
@@ -72,15 +76,19 @@ function Dashboard({
         }),
       });
 
-      const result = await response.text();
+      const result = await response.json();
 
       if (response.ok) {
-        setMessage(result);
+        setMessage(result.message || "Skills saved successfully");
+        setMessageType("success");
       } else {
-        setMessage("Failed to save skills.");
+        setMessage(result.message || "Failed to save skills.");
+        setMessageType("error");
       }
     } catch (error) {
+      console.error("Save skills error:", error);
       setMessage("Could not connect to the server.");
+      setMessageType("error");
     }
   };
 
@@ -95,9 +103,7 @@ function Dashboard({
       </div>
 
       {statsMessage && (
-        <p className="dashboard-stats-message">
-          {statsMessage}
-        </p>
+        <p className="dashboard-stats-message">{statsMessage}</p>
       )}
 
       <div className="stats-grid">
@@ -131,8 +137,7 @@ function Dashboard({
           <h2>Your Skill Profile</h2>
 
           <p className="card-description">
-            Tell the community what you can teach and what
-            you want to learn.
+            Tell the community what you can teach and what you want to learn.
           </p>
 
           <form onSubmit={handleSaveSkills}>
@@ -142,9 +147,7 @@ function Dashboard({
               type="text"
               placeholder="Example: Java"
               value={teachSkill}
-              onChange={(event) =>
-                setTeachSkill(event.target.value)
-              }
+              onChange={(event) => setTeachSkill(event.target.value)}
               required
             />
 
@@ -154,22 +157,33 @@ function Dashboard({
               type="text"
               placeholder="Example: UI/UX Design"
               value={learnSkill}
-              onChange={(event) =>
-                setLearnSkill(event.target.value)
-              }
+              onChange={(event) => setLearnSkill(event.target.value)}
               required
             />
 
-            <button
-              className="primary-button"
-              type="submit"
-            >
+            <button className="primary-button" type="submit">
               Save Skills
             </button>
           </form>
 
           {message && (
-            <p className="success-message">
+            <p
+              className="success-message"
+              style={{
+                color: messageType === "error" ? "#ff6b6b" : "#63f5a0",
+                background:
+                  messageType === "error"
+                    ? "rgba(255, 70, 70, 0.12)"
+                    : "rgba(70, 220, 150, 0.12)",
+                border:
+                  messageType === "error"
+                    ? "1px solid rgba(255, 70, 70, 0.25)"
+                    : "1px solid rgba(70, 220, 150, 0.25)",
+                padding: "14px 16px",
+                borderRadius: "12px",
+                fontWeight: "600",
+              }}
+            >
               {message}
             </p>
           )}
@@ -179,44 +193,28 @@ function Dashboard({
           <h2>Explore SkillSwap</h2>
 
           <p className="card-description">
-            Find people, manage swap requests and connect
-            with your matches.
+            Find people, manage swap requests and connect with your matches.
           </p>
 
-          <button
-            className="action-button"
-            onClick={onFindMatches}
-          >
+          <button className="action-button" onClick={onFindMatches}>
             🔎 Find Matches
           </button>
 
-          <button
-            className="action-button"
-            onClick={onViewRequests}
-          >
+          <button className="action-button" onClick={onViewRequests}>
             📩 Swap Requests
           </button>
 
-          <button
-            className="action-button"
-            onClick={onViewSentRequests}
-          >
+          <button className="action-button" onClick={onViewSentRequests}>
             📤 Sent Requests
           </button>
 
-          <button
-            className="action-button"
-            onClick={onViewConnections}
-          >
+          <button className="action-button" onClick={onViewConnections}>
             🤝 My Connections
           </button>
         </div>
       </div>
 
-      <button
-        className="dashboard-logout"
-        onClick={onLogout}
-      >
+      <button className="dashboard-logout" onClick={onLogout}>
         Logout
       </button>
     </div>

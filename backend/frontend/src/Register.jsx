@@ -5,11 +5,13 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const handleRegister = async (event) => {
     event.preventDefault();
 
     setMessage("");
+    setMessageType("");
 
     try {
       const response = await fetch("/api/users/register", {
@@ -24,20 +26,23 @@ function Register() {
         }),
       });
 
-      const result = await response.text();
+      const result = await response.json();
 
       if (!response.ok) {
-        setMessage(result || "Registration failed.");
+        setMessage(result.message || "Registration failed.");
+        setMessageType("error");
         return;
       }
 
-      setMessage("Registration successful! You can now login.");
+      setMessage(result.message || "Registration successful! You can now login.");
+      setMessageType("success");
 
       setName("");
       setEmail("");
       setPassword("");
     } catch (error) {
       setMessage("Could not connect to the server.");
+      setMessageType("error");
     }
   };
 
@@ -86,7 +91,23 @@ function Register() {
           />
 
           {message && (
-            <p className="auth-success">
+            <p
+              className="auth-message"
+              style={{
+                color: messageType === "error" ? "#ff6b6b" : "#63f5a0",
+                background:
+                  messageType === "error"
+                    ? "rgba(255, 70, 70, 0.12)"
+                    : "rgba(70, 220, 150, 0.12)",
+                border:
+                  messageType === "error"
+                    ? "1px solid rgba(255, 70, 70, 0.25)"
+                    : "1px solid rgba(70, 220, 150, 0.25)",
+                padding: "14px 16px",
+                borderRadius: "12px",
+                fontWeight: "600",
+              }}
+            >
               {message}
             </p>
           )}
