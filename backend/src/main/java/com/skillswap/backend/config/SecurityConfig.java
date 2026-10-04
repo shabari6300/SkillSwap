@@ -69,6 +69,10 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico",
                                 "/api/hello",
                                 "/api/users/register",
                                 "/api/users/login"
