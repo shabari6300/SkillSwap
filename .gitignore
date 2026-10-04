@@ -1,0 +1,31 @@
+# Maven
+backend/target/
+
+# Node
+backend/frontend/node_modules/
+backend/frontend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+backend/src/main/resources/application.properties
+
+# Separate project / old files
+ToDo/
+
+# Backup files created during project cleanup
+backend/src/main/java/com/skillswap/backend/config_backup
+backend/src/main/java/com/skillswap/backend/dto_backup
