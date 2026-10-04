@@ -1,0 +1,12 @@
+.git
+.gitignore
+
+backend/target/
+backend/frontend/node_modules/
+backend/frontend/dist/
+
+backend/src/main/resources/application.properties
+
+*.log
+.vscode/
+.idea/
