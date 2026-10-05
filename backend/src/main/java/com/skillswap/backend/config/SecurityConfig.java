@@ -88,6 +88,7 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/robots.txt",
                                 "/sitemap.xml",
+                                "/googlec2958e50fb5b386c.html",
                                 "/api/hello",
                                 "/api/users/register",
                                 "/api/users/login"
