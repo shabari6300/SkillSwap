@@ -4,6 +4,7 @@
   onRequests,
   onSentRequests,
   onConnections,
+  onResources,
   onProfile,
   onNotifications,
   notificationCount,
@@ -16,11 +17,17 @@
       </div>
 
       <div className="navbar-links">
-        <button onClick={onHome}>Home</button>
+        <button onClick={onHome}>
+          Home
+        </button>
 
-        <button onClick={onMatches}>Matches</button>
+        <button onClick={onMatches}>
+          Matches
+        </button>
 
-        <button onClick={onRequests}>Requests</button>
+        <button onClick={onRequests}>
+          Requests
+        </button>
 
         <button onClick={onSentRequests}>
           Sent Requests
@@ -28,6 +35,10 @@
 
         <button onClick={onConnections}>
           Connections
+        </button>
+
+        <button onClick={onResources}>
+          📚 Resources
         </button>
 
         <button onClick={onProfile}>

@@ -11,6 +11,7 @@ import Connections from "./Connections";
 import Chat from "./Chat";
 import Profile from "./Profile";
 import Notifications from "./Notifications";
+import Resources from "./Resources";
 import Navigation from "./Navigation";
 
 function App() {
@@ -22,7 +23,6 @@ function App() {
 
   /*
    * Check whether the Spring Security session already exists.
-   * This runs when the app loads or when the browser is refreshed.
    */
   useEffect(() => {
     const restoreSession = async () => {
@@ -155,6 +155,10 @@ function App() {
     setPage("connections");
   };
 
+  const goResources = () => {
+    setPage("resources");
+  };
+
   const goProfile = () => {
     setPage("profile");
   };
@@ -176,6 +180,7 @@ function App() {
         onRequests={goRequests}
         onSentRequests={goSentRequests}
         onConnections={goConnections}
+        onResources={goResources}
         onProfile={goProfile}
         onNotifications={goNotifications}
         notificationCount={notificationCount}
@@ -270,6 +275,16 @@ function App() {
           email={userEmail}
           onOpenChat={handleOpenChat}
         />
+      </div>
+    );
+  }
+
+  if (page === "resources") {
+    return (
+      <div>
+        {renderNavigation()}
+
+        <Resources email={userEmail} />
       </div>
     );
   }
