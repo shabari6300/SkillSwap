@@ -27,19 +27,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> userRepository.findByEmail(username)
-                .map(user -> org.springframework.security.core.userdetails.User
-                        .withUsername(user.getEmail())
-                        .password(user.getPassword())
-                        .roles("USER")
-                        .build())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetailsService userDetailsService(
+            UserRepository userRepository
+    ) {
+        return username ->
+                userRepository.findByEmail(username)
+                        .map(user ->
+                                org.springframework.security.core.userdetails.User
+                                        .withUsername(user.getEmail())
+                                        .password(user.getPassword())
+                                        .roles("USER")
+                                        .build()
+                        )
+                        .orElseThrow(
+                                () -> new UsernameNotFoundException(
+                                        "User not found"
+                                )
+                        );
     }
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration) throws Exception {
+            AuthenticationConfiguration configuration
+    ) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -56,7 +66,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            SecurityContextRepository securityContextRepository) throws Exception {
+            SecurityContextRepository securityContextRepository
+    ) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -64,7 +75,9 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .securityContext(securityContext ->
                         securityContext
-                                .securityContextRepository(securityContextRepository)
+                                .securityContextRepository(
+                                        securityContextRepository
+                                )
                                 .requireExplicitSave(true)
                 )
                 .authorizeHttpRequests(auth -> auth
@@ -73,6 +86,8 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/assets/**",
                                 "/favicon.ico",
+                                "/robots.txt",
+                                "/sitemap.xml",
                                 "/api/hello",
                                 "/api/users/register",
                                 "/api/users/login"
@@ -81,7 +96,9 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(
-                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+                                new HttpStatusEntryPoint(
+                                        HttpStatus.UNAUTHORIZED
+                                )
                         )
                 );
 
