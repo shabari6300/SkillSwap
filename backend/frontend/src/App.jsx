@@ -1,8 +1,11 @@
+
 import "./App.css";
 import { useEffect, useState } from "react";
 
 import Register from "./Register";
 import Login from "./Login";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 import Dashboard from "./Dashboard";
 import Matches from "./Matches";
 import Requests from "./Requests";
@@ -22,9 +25,21 @@ function App() {
   const [checkingSession, setCheckingSession] = useState(true);
 
   /*
-   * Check whether the Spring Security session already exists.
+   * Restore the existing session unless the user
+   * has opened a password-reset link from their email.
    */
   useEffect(() => {
+    const resetToken = new URLSearchParams(
+      window.location.search
+    ).get("resetToken");
+
+    if (resetToken) {
+      setPage("resetPassword");
+      setUserEmail("");
+      setCheckingSession(false);
+      return;
+    }
+
     const restoreSession = async () => {
       try {
         const response = await fetch("/api/users/me", {
@@ -117,6 +132,20 @@ function App() {
   };
 
   /*
+   * Return from password reset to the login page.
+   * Remove the reset token from the browser URL.
+   */
+  const handleBackToLogin = () => {
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
+
+    setPage("login");
+  };
+
+  /*
    * Logout from the actual Spring Security session.
    */
   const handleLogout = async () => {
@@ -197,9 +226,7 @@ function App() {
     return (
       <div className="auth-page">
         <div className="auth-card">
-          <div className="auth-logo">
-            SkillSwap
-          </div>
+          <div className="auth-logo">SkillSwap</div>
 
           <h2>Checking session...</h2>
 
@@ -215,8 +242,29 @@ function App() {
     return <Register />;
   }
 
+  if (page === "forgotPassword") {
+    return (
+      <ForgotPassword
+        onBackToLogin={() => setPage("login")}
+      />
+    );
+  }
+
+  if (page === "resetPassword") {
+    return (
+      <ResetPassword
+        onBackToLogin={handleBackToLogin}
+      />
+    );
+  }
+
   if (page === "login") {
-    return <Login onLogin={handleLogin} />;
+    return (
+      <Login
+        onLogin={handleLogin}
+        onForgotPassword={() => setPage("forgotPassword")}
+      />
+    );
   }
 
   if (page === "dashboard") {
@@ -240,7 +288,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Matches email={userEmail} />
       </div>
     );
@@ -250,7 +297,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Requests email={userEmail} />
       </div>
     );
@@ -260,7 +306,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <SentRequests email={userEmail} />
       </div>
     );
@@ -283,7 +328,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Resources email={userEmail} />
       </div>
     );
@@ -293,7 +337,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Profile email={userEmail} />
       </div>
     );
@@ -303,7 +346,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Notifications email={userEmail} />
       </div>
     );

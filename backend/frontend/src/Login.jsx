@@ -1,14 +1,17 @@
+
 import { useState } from "react";
 
-function Login({ onLogin }) {
+function Login({ onLogin, onForgotPassword }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     setMessage("");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/users/login", {
@@ -18,8 +21,8 @@ function Login({ onLogin }) {
         },
         credentials: "include",
         body: JSON.stringify({
-          email: email,
-          password: password,
+          email: email.trim(),
+          password,
         }),
       });
 
@@ -30,9 +33,7 @@ function Login({ onLogin }) {
         return;
       }
 
-      /*
-       * Verify that the Spring Security session is active.
-       */
+      // Verify that the Spring Security session is active.
       const meResponse = await fetch("/api/users/me", {
         method: "GET",
         credentials: "include",
@@ -41,14 +42,18 @@ function Login({ onLogin }) {
       const me = await meResponse.json();
 
       if (!meResponse.ok) {
-        setMessage("Login succeeded, but the session could not be verified.");
+        setMessage(
+          "Login succeeded, but the session could not be verified."
+        );
         return;
       }
 
       onLogin(me.email);
     } catch (error) {
-      console.error(error);
-      setMessage("Could not connect to the server.");
+      console.error("Login failed:", error);
+      setMessage("Could not connect to the server. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,34 +71,60 @@ function Login({ onLogin }) {
         </p>
 
         <form onSubmit={handleLogin} className="auth-form">
-          <label>Email</label>
+          <label htmlFor="login-email">Email</label>
 
           <input
+            id="login-email"
             type="email"
+            autoComplete="email"
             placeholder="Enter your email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
           />
 
-          <label>Password</label>
+          <label htmlFor="login-password">Password</label>
 
           <input
+            id="login-password"
             type="password"
+            autoComplete="current-password"
             placeholder="Enter your password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
 
+          <div style={{ textAlign: "right", marginTop: "-4px" }}>
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                color: "inherit",
+                cursor: "pointer",
+                textDecoration: "underline",
+                fontSize: "0.9rem",
+              }}
+            >
+              Forgot password?
+            </button>
+          </div>
+
           {message && (
-            <p className="auth-error">
+            <p className="auth-error" role="alert">
               {message}
             </p>
           )}
 
-          <button className="auth-button" type="submit">
-            Login
+          <button
+            className="auth-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
