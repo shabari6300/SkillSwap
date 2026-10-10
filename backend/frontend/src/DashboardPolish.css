@@ -1,0 +1,112 @@
+
+/* SkillSwap — spacious dashboard styling */
+
+.dashboard,
+.dashboard-page,
+.dashboard-container,
+.dashboard-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(24px, 4vw, 56px);
+}
+
+.dashboard-header,
+.dashboard-heading,
+.dashboard-welcome {
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+.dashboard-header h1,
+.dashboard-heading h1,
+.dashboard-welcome h1 {
+  margin-bottom: 16px;
+  line-height: 1.25;
+}
+
+.dashboard-header p,
+.dashboard-heading p,
+.dashboard-welcome p {
+  line-height: 1.8;
+}
+
+.dashboard-stats,
+.dashboard-stats-grid,
+.stats-grid,
+.dashboard-grid {
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.stat-card,
+.dashboard-stat-card,
+.dashboard-card,
+.profile-card,
+.skill-profile-card {
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 26px;
+  border-radius: 18px;
+  line-height: 1.7;
+}
+
+.stat-card h2,
+.dashboard-stat-card h2,
+.dashboard-card h2,
+.profile-card h2 {
+  margin-bottom: 14px;
+}
+
+.stat-card p,
+.dashboard-stat-card p,
+.dashboard-card p,
+.profile-card p {
+  line-height: 1.8;
+}
+
+.dashboard-actions,
+.dashboard-action-grid,
+.action-grid,
+.feature-grid {
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.dashboard-actions > *,
+.dashboard-action-grid > *,
+.action-grid > * {
+  min-width: 0;
+}
+
+.dashboard button {
+  min-height: 42px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .dashboard,
+  .dashboard-page,
+  .dashboard-container,
+  .dashboard-content {
+    padding: 24px 18px;
+  }
+
+  .dashboard-stats,
+  .dashboard-stats-grid,
+  .stats-grid,
+  .dashboard-grid {
+    gap: 16px;
+  }
+
+  .stat-card,
+  .dashboard-stat-card,
+  .dashboard-card,
+  .profile-card,
+  .skill-profile-card {
+    padding: 20px;
+  }
+}

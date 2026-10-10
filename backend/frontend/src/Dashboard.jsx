@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from "react";
+import "./DashboardPolish.css";
 
 function Dashboard({
   email,
@@ -25,7 +27,8 @@ function Dashboard({
     const loadStats = async () => {
       try {
         const response = await fetch(
-          `/api/stats?email=${encodeURIComponent(email)}`
+          `/api/stats?email=${encodeURIComponent(email)}`,
+          { credentials: "include" }
         );
 
         if (!response.ok) {
@@ -53,7 +56,9 @@ function Dashboard({
       }
     };
 
-    loadStats();
+    if (email) {
+      loadStats();
+    }
   }, [email]);
 
   const handleSaveSkills = async (event) => {
@@ -70,16 +75,16 @@ function Dashboard({
         },
         credentials: "include",
         body: JSON.stringify({
-          email: email,
-          teachSkill: teachSkill,
-          learnSkill: learnSkill,
+          email,
+          teachSkill,
+          learnSkill,
         }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        setMessage(result.message || "Skills saved successfully");
+        setMessage(result.message || "Skills saved successfully.");
         setMessageType("success");
       } else {
         setMessage(result.message || "Failed to save skills.");
@@ -93,131 +98,212 @@ function Dashboard({
   };
 
   return (
-    <div className="dashboard-page">
-      <div className="dashboard-header">
-        <h1>Welcome to SkillSwap 👋</h1>
+    <main className="dashboard-page">
+      <header className="dashboard-header">
+        <div className="dashboard-eyebrow">
+          YOUR SKILLS. YOUR COMMUNITY.
+        </div>
+
+        <h1>
+          Welcome to SkillSwap <span>👋</span>
+        </h1>
 
         <p className="logged-user">
           Logged in as <strong>{email}</strong>
         </p>
-      </div>
+      </header>
 
       {statsMessage && (
-        <p className="dashboard-stats-message">{statsMessage}</p>
+        <p className="dashboard-stats-message" role="status">
+          {statsMessage}
+        </p>
       )}
 
-      <div className="stats-grid">
-        <div className="stat-card stat-purple">
+      <section className="stats-grid" aria-label="Your SkillSwap statistics">
+        <article className="stat-card stat-purple">
           <div className="stat-icon">🔎</div>
-          <div>
+          <div className="stat-content">
             <span>Matches</span>
             <strong>{stats.matches}</strong>
+            <small>People to learn with</small>
           </div>
-        </div>
+        </article>
 
-        <div className="stat-card stat-pink">
+        <article className="stat-card stat-pink">
           <div className="stat-icon">📩</div>
-          <div>
+          <div className="stat-content">
             <span>Pending Requests</span>
             <strong>{stats.pendingRequests}</strong>
+            <small>Waiting for your response</small>
           </div>
-        </div>
+        </article>
 
-        <div className="stat-card stat-cyan">
+        <article className="stat-card stat-cyan">
           <div className="stat-icon">🤝</div>
-          <div>
+          <div className="stat-content">
             <span>Connections</span>
             <strong>{stats.connections}</strong>
+            <small>Your learning community</small>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
 
-      <div className="dashboard-grid">
-        <div className="dashboard-card">
-          <h2>Your Skill Profile</h2>
+      <section className="dashboard-grid">
+        <article className="dashboard-card dashboard-profile-card">
+          <div className="dashboard-card-heading">
+            <div className="dashboard-card-icon">✨</div>
+            <div>
+              <h2>Your Skill Profile</h2>
+              <p className="card-description">
+                Share what you can teach and what you want to learn.
+              </p>
+            </div>
+          </div>
 
-          <p className="card-description">
-            Tell the community what you can teach and what you want to learn.
-          </p>
+          <form
+            className="dashboard-skill-form"
+            onSubmit={handleSaveSkills}
+          >
+            <div className="dashboard-field">
+              <label htmlFor="teach-skill">
+                Skill I can teach
+              </label>
+              <input
+                id="teach-skill"
+                type="text"
+                placeholder="Example: Java"
+                value={teachSkill}
+                onChange={(event) => setTeachSkill(event.target.value)}
+                required
+              />
+            </div>
 
-          <form onSubmit={handleSaveSkills}>
-            <label>Skill I can teach</label>
+            <div className="dashboard-field">
+              <label htmlFor="learn-skill">
+                Skill I want to learn
+              </label>
+              <input
+                id="learn-skill"
+                type="text"
+                placeholder="Example: UI/UX Design"
+                value={learnSkill}
+                onChange={(event) => setLearnSkill(event.target.value)}
+                required
+              />
+            </div>
 
-            <input
-              type="text"
-              placeholder="Example: Java"
-              value={teachSkill}
-              onChange={(event) => setTeachSkill(event.target.value)}
-              required
-            />
-
-            <label>Skill I want to learn</label>
-
-            <input
-              type="text"
-              placeholder="Example: UI/UX Design"
-              value={learnSkill}
-              onChange={(event) => setLearnSkill(event.target.value)}
-              required
-            />
-
-            <button className="primary-button" type="submit">
-              Save Skills
+            <button
+              className="primary-button"
+              type="submit"
+            >
+              Save Skills <span aria-hidden="true">→</span>
             </button>
           </form>
 
           {message && (
-            <p
-              className="success-message"
-              style={{
-                color: messageType === "error" ? "#ff6b6b" : "#63f5a0",
-                background:
-                  messageType === "error"
-                    ? "rgba(255, 70, 70, 0.12)"
-                    : "rgba(70, 220, 150, 0.12)",
-                border:
-                  messageType === "error"
-                    ? "1px solid rgba(255, 70, 70, 0.25)"
-                    : "1px solid rgba(70, 220, 150, 0.25)",
-                padding: "14px 16px",
-                borderRadius: "12px",
-                fontWeight: "600",
-              }}
+            <div
+              className={`dashboard-feedback ${
+                messageType === "error"
+                  ? "dashboard-feedback-error"
+                  : "dashboard-feedback-success"
+              }`}
+              role={messageType === "error" ? "alert" : "status"}
             >
               {message}
-            </p>
+            </div>
           )}
-        </div>
 
-        <div className="dashboard-card">
-          <h2>Explore SkillSwap</h2>
+          <div className="dashboard-tip">
+            <span>💡</span>
+            <p>
+              Every great connection starts with sharing what you know.
+            </p>
+          </div>
+        </article>
 
-          <p className="card-description">
-            Find people, manage swap requests and connect with your matches.
-          </p>
+        <article className="dashboard-card dashboard-explore-card">
+          <div className="dashboard-card-heading">
+            <div className="dashboard-card-icon">🚀</div>
+            <div>
+              <h2>Explore SkillSwap</h2>
+              <p className="card-description">
+                Find people, manage your requests, and connect with
+                your matches.
+              </p>
+            </div>
+          </div>
 
-          <button className="action-button" onClick={onFindMatches}>
-            🔎 Find Matches
-          </button>
+          <div className="dashboard-actions">
+            <button
+              className="action-button"
+              onClick={onFindMatches}
+            >
+              <span className="dashboard-action-icon">🔎</span>
+              <span className="dashboard-action-copy">
+                <strong>Find Matches</strong>
+                <small>Discover compatible learners</small>
+              </span>
+              <span className="dashboard-action-arrow">→</span>
+            </button>
 
-          <button className="action-button" onClick={onViewRequests}>
-            📩 Swap Requests
-          </button>
+            <button
+              className="action-button"
+              onClick={onViewRequests}
+            >
+              <span className="dashboard-action-icon">📩</span>
+              <span className="dashboard-action-copy">
+                <strong>Swap Requests</strong>
+                <small>Review received requests</small>
+              </span>
+              <span className="dashboard-action-arrow">→</span>
+            </button>
 
-          <button className="action-button" onClick={onViewSentRequests}>
-            📤 Sent Requests
-          </button>
+            <button
+              className="action-button"
+              onClick={onViewSentRequests}
+            >
+              <span className="dashboard-action-icon">📤</span>
+              <span className="dashboard-action-copy">
+                <strong>Sent Requests</strong>
+                <small>Track your invitations</small>
+              </span>
+              <span className="dashboard-action-arrow">→</span>
+            </button>
 
-          <button className="action-button" onClick={onViewConnections}>
-            🤝 My Connections
-          </button>
-        </div>
-      </div>
+            <button
+              className="action-button"
+              onClick={onViewConnections}
+            >
+              <span className="dashboard-action-icon">🤝</span>
+              <span className="dashboard-action-copy">
+                <strong>My Connections</strong>
+                <small>Meet your learning partners</small>
+              </span>
+              <span className="dashboard-action-arrow">→</span>
+            </button>
+          </div>
 
-      <button className="dashboard-logout" onClick={onLogout}>
-        Logout
-      </button>
-    </div>
+          <div className="dashboard-community-note">
+            <span>🌱</span>
+            <p>
+              Learn together. Exchange knowledge. Grow at your own pace.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <footer className="dashboard-footer">
+        <span>SkillSwap</span>
+        <span>Learn. Teach. Connect.</span>
+        <button
+          type="button"
+          className="dashboard-logout"
+          onClick={onLogout}
+        >
+          Logout
+        </button>
+      </footer>
+    </main>
   );
 }
 

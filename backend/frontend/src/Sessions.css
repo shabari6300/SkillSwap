@@ -1,0 +1,1023 @@
+
+/* =====================================================
+   SKILLSWAP — PREMIUM SKILL JOURNEY DESIGN
+   Scoped to the Skill Journey page.
+   No application logic changes.
+   ===================================================== */
+
+.skill-journey-page {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1540px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 46px clamp(18px, 4vw, 58px) 70px;
+  color: #f5f3ff;
+}
+
+.skill-journey-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at 12% 5%,
+      rgba(139, 92, 246, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 90% 25%,
+      rgba(192, 132, 252, 0.07),
+      transparent 30%
+    );
+}
+
+.skill-journey-page * {
+  box-sizing: border-box;
+}
+
+.skill-journey-page button,
+.skill-journey-page input,
+.skill-journey-page textarea {
+  font-family: inherit;
+}
+
+/* ---------- Page heading ---------- */
+
+.sj-hero {
+  position: relative;
+  padding: 30px 0 32px;
+  margin-bottom: 12px;
+}
+
+.sj-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  margin-bottom: 19px;
+  border: 1px solid rgba(196, 181, 253, 0.23);
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.09);
+  color: #d8b4fe;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.sj-eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c084fc;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.8);
+}
+
+.sj-hero h1 {
+  margin: 0 0 15px;
+  color: #ffffff;
+  font-size: clamp(2.5rem, 5vw, 4.1rem);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
+}
+
+.sj-hero p {
+  max-width: 720px;
+  margin: 0;
+  color: #aaa6c5;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* ---------- Summary statistics ---------- */
+
+.sj-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 14px 0 34px;
+}
+
+.sj-stat-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+  padding: 23px;
+  overflow: hidden;
+  border: 1px solid rgba(167, 139, 250, 0.18);
+  border-radius: 19px;
+  background:
+    linear-gradient(
+      140deg,
+      rgba(34, 26, 60, 0.87),
+      rgba(15, 14, 34, 0.91)
+    );
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.13);
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.sj-stat-card::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -35px;
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.08);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.sj-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(196, 181, 253, 0.36);
+  box-shadow: 0 17px 38px rgba(0, 0, 0, 0.2);
+}
+
+.sj-stat-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 53px;
+  height: 53px;
+  flex: 0 0 53px;
+  place-items: center;
+  border: 1px solid rgba(196, 181, 253, 0.16);
+  border-radius: 16px;
+  background: rgba(139, 92, 246, 0.13);
+  font-size: 1.45rem;
+}
+
+.sj-stat-card > div {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.sj-stat-card strong {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.sj-stat-card span:last-child {
+  color: #aaa6c5;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+/* ---------- Feedback messages ---------- */
+
+.sj-message {
+  padding: 15px 18px;
+  margin-bottom: 19px;
+  border-radius: 13px;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.sj-message-error {
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  background: rgba(127, 29, 29, 0.2);
+  color: #fecaca;
+}
+
+.sj-message-success {
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  background: rgba(20, 83, 45, 0.19);
+  color: #bbf7d0;
+}
+
+/* ---------- Main layout ---------- */
+
+.sj-main-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: 25px;
+}
+
+.sj-create-panel,
+.sj-card {
+  min-width: 0;
+  padding: 27px;
+  border: 1px solid rgba(167, 139, 250, 0.19);
+  border-radius: 21px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(28, 22, 49, 0.91),
+      rgba(13, 12, 30, 0.94)
+    );
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ---------- Create journey panel ---------- */
+
+.sj-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 27px;
+}
+
+.sj-heading-icon {
+  display: grid;
+  width: 51px;
+  height: 51px;
+  flex: 0 0 51px;
+  place-items: center;
+  border: 1px solid rgba(196, 181, 253, 0.16);
+  border-radius: 16px;
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.24),
+    rgba(168, 85, 247, 0.08)
+  );
+  font-size: 1.45rem;
+}
+
+.sj-panel-heading h2,
+.sj-journeys-heading h2 {
+  margin: 0 0 7px;
+  color: #ffffff;
+  font-size: 1.22rem;
+  font-weight: 750;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+}
+
+.sj-panel-heading p,
+.sj-journeys-heading p {
+  margin: 0;
+  color: #aaa6c5;
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+/* ---------- Forms and inputs ---------- */
+
+.sj-create-form,
+.sj-milestone-form {
+  display: grid;
+  gap: 18px;
+}
+
+.sj-create-form label,
+.sj-milestone-form label {
+  display: grid;
+  gap: 9px;
+  color: #e9e5fa;
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.skill-journey-page input,
+.skill-journey-page textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid rgba(167, 139, 250, 0.21);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(7, 7, 22, 0.76);
+  color: #ffffff;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.skill-journey-page input:hover,
+.skill-journey-page textarea:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.skill-journey-page input:focus,
+.skill-journey-page textarea:focus {
+  border-color: #a78bfa;
+  background: rgba(12, 10, 31, 0.95);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.13);
+}
+
+.skill-journey-page input::placeholder,
+.skill-journey-page textarea::placeholder {
+  color: #77728f;
+  opacity: 1;
+}
+
+.skill-journey-page input[type="date"] {
+  min-height: 47px;
+  color-scheme: dark;
+}
+
+.skill-journey-page textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.skill-journey-page input:disabled,
+.skill-journey-page textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Buttons ---------- */
+
+.sj-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 45px;
+  padding: 12px 17px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.45;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.sj-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.sj-button:focus-visible,
+.sj-refresh-button:focus-visible,
+.sj-delete-button:focus-visible,
+.sj-milestone-check:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 3px;
+}
+
+.sj-button:disabled,
+.sj-refresh-button:disabled,
+.sj-delete-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.sj-button-primary {
+  width: 100%;
+  margin-top: 2px;
+  color: #ffffff;
+  border-color: rgba(196, 181, 253, 0.24);
+  background: linear-gradient(110deg, #7c3aed, #a855f7);
+  box-shadow: 0 9px 25px rgba(124, 58, 237, 0.2);
+}
+
+.sj-button-primary:hover:not(:disabled) {
+  background: linear-gradient(110deg, #6d28d9, #9333ea);
+  box-shadow: 0 13px 30px rgba(124, 58, 237, 0.29);
+}
+
+.sj-button-secondary {
+  color: #e9ddff;
+  border-color: rgba(167, 139, 250, 0.25);
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.sj-button-secondary:hover:not(:disabled) {
+  border-color: rgba(196, 181, 253, 0.42);
+  background: rgba(139, 92, 246, 0.2);
+}
+
+/* ---------- Learning tip ---------- */
+
+.sj-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin-top: 24px;
+  border: 1px solid rgba(103, 232, 249, 0.13);
+  border-radius: 13px;
+  background: linear-gradient(
+    120deg,
+    rgba(59, 130, 246, 0.08),
+    rgba(139, 92, 246, 0.06)
+  );
+}
+
+.sj-tip > span {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.sj-tip p {
+  margin: 0;
+  color: #aaa6c5;
+  font-size: 0.82rem;
+  line-height: 1.8;
+}
+
+/* ---------- Journey list heading ---------- */
+
+.sj-journeys-panel {
+  min-width: 0;
+}
+
+.sj-journeys-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 20px;
+}
+
+.sj-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 38px;
+  padding: 9px 13px;
+  border: 1px solid rgba(167, 139, 250, 0.24);
+  border-radius: 10px;
+  background: rgba(139, 92, 246, 0.1);
+  color: #e9ddff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.sj-refresh-button:hover:not(:disabled) {
+  border-color: rgba(196, 181, 253, 0.4);
+  background: rgba(139, 92, 246, 0.19);
+}
+
+.sj-journey-list {
+  display: grid;
+  gap: 19px;
+}
+
+/* ---------- Individual journey cards ---------- */
+
+.sj-card {
+  padding: 25px;
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.sj-card:hover {
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+}
+
+.sj-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.sj-title-area {
+  min-width: 0;
+}
+
+.sj-skill-label {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(196, 181, 253, 0.2);
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.11);
+  color: #d8b4fe;
+  font-size: 0.74rem;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.sj-card-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 780;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.sj-description {
+  margin: 10px 0 0;
+  color: #aaa6c5;
+  font-size: 0.87rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.sj-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sj-status-progress {
+  border-color: rgba(167, 139, 250, 0.22);
+  background: rgba(139, 92, 246, 0.13);
+  color: #ddd6fe;
+}
+
+.sj-status-completed {
+  border-color: rgba(74, 222, 128, 0.21);
+  background: rgba(22, 163, 74, 0.11);
+  color: #bbf7d0;
+}
+
+/* ---------- Progress display ---------- */
+
+.sj-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0 10px;
+  color: #aaa6c5;
+  font-size: 0.83rem;
+}
+
+.sj-progress-info strong {
+  color: #d8b4fe;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.sj-progress-track {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(167, 139, 250, 0.09);
+  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.12);
+}
+
+.sj-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7c3aed, #a855f7, #d8b4fe);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.3);
+  transition: width 0.35s ease;
+}
+
+/* ---------- Journey details ---------- */
+
+.sj-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  margin-top: 15px;
+  color: #aaa6c5;
+  font-size: 0.79rem;
+  line-height: 1.65;
+}
+
+.sj-divider {
+  height: 1px;
+  margin: 24px 0;
+  background: linear-gradient(
+    90deg,
+    rgba(167, 139, 250, 0.26),
+    rgba(167, 139, 250, 0.05)
+  );
+}
+
+/* ---------- Milestones ---------- */
+
+.sj-section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.sj-section-title h4,
+.sj-milestone-form h4 {
+  margin: 0;
+  color: #f5f3ff;
+  font-size: 0.98rem;
+  font-weight: 750;
+}
+
+.sj-section-title > span {
+  display: inline-grid;
+  min-width: 28px;
+  height: 28px;
+  place-items: center;
+  padding: 0 7px;
+  border: 1px solid rgba(167, 139, 250, 0.17);
+  border-radius: 9px;
+  background: rgba(139, 92, 246, 0.12);
+  color: #e9ddff;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.sj-muted {
+  margin: 0 0 20px;
+  color: #9690b2;
+  font-size: 0.84rem;
+  line-height: 1.8;
+}
+
+.sj-milestone-list {
+  display: grid;
+  gap: 11px;
+  margin-bottom: 25px;
+}
+
+.sj-milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(167, 139, 250, 0.14);
+  border-radius: 13px;
+  background: rgba(7, 7, 22, 0.4);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.sj-milestone:hover {
+  border-color: rgba(167, 139, 250, 0.27);
+}
+
+.sj-milestone.is-completed {
+  border-color: rgba(74, 222, 128, 0.17);
+  background: rgba(22, 163, 74, 0.055);
+}
+
+.sj-milestone-check {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  margin-top: 1px;
+  padding: 0;
+  border: 1px solid rgba(196, 181, 253, 0.5);
+  border-radius: 7px;
+  background: rgba(139, 92, 246, 0.07);
+  color: #ffffff;
+  font-size: 0.83rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.sj-milestone-check:hover:not(:disabled) {
+  border-color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.22);
+}
+
+.sj-milestone-check.checked {
+  border-color: #34d399;
+  background: #15803d;
+}
+
+.sj-milestone-check:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sj-milestone-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sj-milestone-title {
+  color: #f5f3ff;
+  font-size: 0.87rem;
+  font-weight: 750;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.sj-milestone.is-completed .sj-milestone-title {
+  color: #bbf7d0;
+}
+
+.sj-milestone-content p {
+  margin: 5px 0;
+  color: #aaa6c5;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.sj-milestone-content small {
+  display: block;
+  margin-top: 7px;
+  color: #a89bcf;
+  font-size: 0.74rem;
+}
+
+.sj-milestone-state {
+  flex-shrink: 0;
+  padding: 5px 8px;
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  border-radius: 7px;
+  background: rgba(139, 92, 246, 0.09);
+  color: #ddd6fe;
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.sj-milestone-state.done {
+  border-color: rgba(74, 222, 128, 0.17);
+  background: rgba(22, 163, 74, 0.1);
+  color: #bbf7d0;
+}
+
+/* ---------- Add milestone form ---------- */
+
+.sj-milestone-form {
+  padding-top: 22px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(167, 139, 250, 0.15);
+}
+
+.sj-milestone-form h4 {
+  margin-bottom: 2px;
+}
+
+.sj-milestone-form .sj-button {
+  width: 100%;
+}
+
+/* ---------- Completed journey ---------- */
+
+.sj-completion-message {
+  padding: 15px 16px;
+  margin-top: 17px;
+  border: 1px solid rgba(74, 222, 128, 0.22);
+  border-radius: 12px;
+  background: linear-gradient(
+    110deg,
+    rgba(22, 163, 74, 0.12),
+    rgba(20, 83, 45, 0.08)
+  );
+  color: #bbf7d0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+/* ---------- Delete action ---------- */
+
+.sj-delete-button {
+  display: block;
+  padding: 9px 0;
+  margin: 17px 0 0 auto;
+  border: none;
+  background: transparent;
+  color: #fca5a5;
+  font-size: 0.79rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sj-delete-button:hover:not(:disabled) {
+  color: #fecaca;
+  text-decoration: underline;
+}
+
+.sj-delete-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Empty and loading states ---------- */
+
+.sj-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 310px;
+  padding: 38px 25px;
+  border: 1px dashed rgba(167, 139, 250, 0.25);
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      ellipse at 50% 15%,
+      rgba(139, 92, 246, 0.1),
+      transparent 65%
+    ),
+    rgba(18, 17, 41, 0.45);
+  text-align: center;
+}
+
+.sj-empty-state > span {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  margin-bottom: 21px;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 22px;
+  background: rgba(139, 92, 246, 0.11);
+  font-size: 2rem;
+}
+
+.sj-empty-state h3 {
+  margin: 0 0 10px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.sj-empty-state p {
+  max-width: 390px;
+  margin: 0;
+  color: #aaa6c5;
+  font-size: 0.87rem;
+  line-height: 1.8;
+}
+
+/* ---------- Tablet layout ---------- */
+
+@media (max-width: 1080px) {
+  .sj-main-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sj-create-panel {
+    max-width: none;
+  }
+
+  .sj-journeys-panel {
+    width: 100%;
+  }
+}
+
+/* ---------- Mobile layout ---------- */
+
+@media (max-width: 650px) {
+  .skill-journey-page {
+    padding: 25px 16px 45px;
+  }
+
+  .sj-hero {
+    padding-top: 20px;
+    padding-bottom: 26px;
+  }
+
+  .sj-eyebrow {
+    padding: 8px 11px;
+    font-size: 0.64rem;
+    letter-spacing: 1px;
+  }
+
+  .sj-hero h1 {
+    font-size: clamp(2.3rem, 10vw, 3.2rem);
+  }
+
+  .sj-hero p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  .sj-stats {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+
+  .sj-stat-card {
+    padding: 17px 19px;
+    border-radius: 15px;
+  }
+
+  .sj-stat-icon {
+    width: 47px;
+    height: 47px;
+    flex-basis: 47px;
+    border-radius: 14px;
+  }
+
+  .sj-stat-card strong {
+    font-size: 1.65rem;
+  }
+
+  .sj-create-panel,
+  .sj-card {
+    padding: 19px;
+    border-radius: 17px;
+  }
+
+  .sj-panel-heading {
+    gap: 11px;
+  }
+
+  .sj-panel-heading h2,
+  .sj-journeys-heading h2 {
+    font-size: 1.08rem;
+  }
+
+  .sj-journeys-heading {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .sj-refresh-button {
+    min-height: 35px;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+  .sj-card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sj-card-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .sj-status {
+    align-self: flex-start;
+  }
+
+  .sj-milestone {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .sj-milestone-state {
+    margin-left: 34px;
+  }
+
+  .sj-empty-state {
+    min-height: 270px;
+    padding: 30px 18px;
+  }
+}
+
+/* Respect users who prefer reduced motion. */
+
+@media (prefers-reduced-motion: reduce) {
+  .sj-stat-card,
+  .sj-card,
+  .sj-button,
+  .sj-progress-fill,
+  .sj-milestone,
+  .sj-milestone-check,
+  .sj-refresh-button {
+    transition: none;
+  }
+
+  .sj-stat-card:hover,
+  .sj-button:hover:not(:disabled) {
+    transform: none;
+  }
+}

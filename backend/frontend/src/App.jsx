@@ -1,5 +1,6 @@
 
 import "./App.css";
+import "./HomePolish.css";
 import { useEffect, useState } from "react";
 
 import Register from "./Register";
@@ -16,6 +17,8 @@ import Profile from "./Profile";
 import Notifications from "./Notifications";
 import Resources from "./Resources";
 import Navigation from "./Navigation";
+import Sessions from "./Sessions";
+import SkillJourney from "./SkillJourney";
 
 function App() {
   const [page, setPage] = useState("home");
@@ -24,10 +27,6 @@ function App() {
   const [notificationCount, setNotificationCount] = useState(0);
   const [checkingSession, setCheckingSession] = useState(true);
 
-  /*
-   * Restore the existing session unless the user
-   * has opened a password-reset link from their email.
-   */
   useEffect(() => {
     const resetToken = new URLSearchParams(
       window.location.search
@@ -49,7 +48,6 @@ function App() {
 
         if (response.ok) {
           const user = await response.json();
-
           setUserEmail(user.email);
           setPage("dashboard");
         } else {
@@ -68,9 +66,6 @@ function App() {
     restoreSession();
   }, []);
 
-  /*
-   * Load the number of pending requests.
-   */
   const loadNotificationCount = async (email) => {
     if (!email) {
       setNotificationCount(0);
@@ -103,9 +98,6 @@ function App() {
     }
   };
 
-  /*
-   * Keep the notification count updated.
-   */
   useEffect(() => {
     if (!userEmail) {
       setNotificationCount(0);
@@ -118,23 +110,14 @@ function App() {
       loadNotificationCount(userEmail);
     }, 3000);
 
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [userEmail]);
 
-  /*
-   * Called after successful login.
-   */
   const handleLogin = (email) => {
     setUserEmail(email);
     setPage("dashboard");
   };
 
-  /*
-   * Return from password reset to the login page.
-   * Remove the reset token from the browser URL.
-   */
   const handleBackToLogin = () => {
     window.history.replaceState(
       {},
@@ -145,9 +128,6 @@ function App() {
     setPage("login");
   };
 
-  /*
-   * Logout from the actual Spring Security session.
-   */
   const handleLogout = async () => {
     try {
       await fetch("/api/users/logout", {
@@ -164,75 +144,46 @@ function App() {
     setPage("home");
   };
 
-  const goHome = () => {
-    setPage("dashboard");
-  };
-
-  const goMatches = () => {
-    setPage("matches");
-  };
-
-  const goRequests = () => {
-    setPage("requests");
-  };
-
-  const goSentRequests = () => {
-    setPage("sentRequests");
-  };
-
-  const goConnections = () => {
-    setPage("connections");
-  };
-
-  const goResources = () => {
-    setPage("resources");
-  };
-
-  const goProfile = () => {
-    setPage("profile");
-  };
-
-  const goNotifications = () => {
-    setPage("notifications");
-  };
+  const goHome = () => setPage("dashboard");
+  const goMatches = () => setPage("matches");
+  const goRequests = () => setPage("requests");
+  const goSentRequests = () => setPage("sentRequests");
+  const goConnections = () => setPage("connections");
+  const goSessions = () => setPage("sessions");
+  const goSkillJourney = () => setPage("skillJourney");
+  const goResources = () => setPage("resources");
+  const goProfile = () => setPage("profile");
+  const goNotifications = () => setPage("notifications");
 
   const handleOpenChat = (email) => {
     setConnectionEmail(email);
     setPage("chat");
   };
 
-  const renderNavigation = () => {
-    return (
-      <Navigation
-        onHome={goHome}
-        onMatches={goMatches}
-        onRequests={goRequests}
-        onSentRequests={goSentRequests}
-        onConnections={goConnections}
-        onResources={goResources}
-        onProfile={goProfile}
-        onNotifications={goNotifications}
-        notificationCount={notificationCount}
-        onLogout={handleLogout}
-      />
-    );
-  };
+  const renderNavigation = () => (
+    <Navigation
+      onHome={goHome}
+      onMatches={goMatches}
+      onRequests={goRequests}
+      onSentRequests={goSentRequests}
+      onConnections={goConnections}
+      onSessions={goSessions}
+      onSkillJourney={goSkillJourney}
+      onResources={goResources}
+      onProfile={goProfile}
+      onNotifications={goNotifications}
+      notificationCount={notificationCount}
+      onLogout={handleLogout}
+    />
+  );
 
-  /*
-   * While checking the backend session,
-   * don't show the wrong page for a moment.
-   */
   if (checkingSession) {
     return (
       <div className="auth-page">
         <div className="auth-card">
           <div className="auth-logo">SkillSwap</div>
-
           <h2>Checking session...</h2>
-
-          <p className="auth-subtitle">
-            Please wait.
-          </p>
+          <p className="auth-subtitle">Please wait.</p>
         </div>
       </div>
     );
@@ -271,7 +222,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Dashboard
           email={userEmail}
           onFindMatches={goMatches}
@@ -315,11 +265,28 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Connections
           email={userEmail}
           onOpenChat={handleOpenChat}
         />
+      </div>
+    );
+  }
+
+  if (page === "sessions") {
+    return (
+      <div>
+        {renderNavigation()}
+        <Sessions email={userEmail} />
+      </div>
+    );
+  }
+
+  if (page === "skillJourney") {
+    return (
+      <div>
+        {renderNavigation()}
+        <SkillJourney email={userEmail} />
       </div>
     );
   }
@@ -355,7 +322,6 @@ function App() {
     return (
       <div>
         {renderNavigation()}
-
         <Chat
           email={userEmail}
           connectionEmail={connectionEmail}
@@ -404,9 +370,7 @@ function App() {
       <div className="feature-grid">
         <div className="feature-card">
           <div className="feature-icon">🔎</div>
-
           <h2>Find Skills</h2>
-
           <p>
             Discover people who can teach what
             you want to learn.
@@ -415,9 +379,7 @@ function App() {
 
         <div className="feature-card">
           <div className="feature-icon">🔄</div>
-
           <h2>Swap Knowledge</h2>
-
           <p>
             Exchange your skills through meaningful
             one-to-one learning.
@@ -426,9 +388,7 @@ function App() {
 
         <div className="feature-card">
           <div className="feature-icon">💬</div>
-
           <h2>Connect</h2>
-
           <p>
             Chat with your connections and start
             your skill exchange.
@@ -438,12 +398,8 @@ function App() {
 
       <footer className="home-footer">
         <h3>SkillSwap</h3>
-
         <p>Learn. Teach. Connect.</p>
-
-        <span>
-          © 2026 SkillSwap. All rights reserved.
-        </span>
+        <span>© 2026 SkillSwap. All rights reserved.</span>
       </footer>
     </div>
   );
